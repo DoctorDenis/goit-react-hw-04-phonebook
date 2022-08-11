@@ -1,0 +1,29 @@
+@import-normalize;
+/* bring in normalize.css styles */
+
+body {
+  height: 100vh;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-image: linear-gradient(rgb(183, 173, 245), rgb(245, 178, 217));
+  background-size: 100%;
+  text-align: center;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.form_input {
+  margin-bottom: 1rem;
+  margin-top: 5px;
+  padding: 5px 20px;
+  font-size: 15pt;
+  border-radius: 5px;
+  box-shadow: inset 0px 0px 5px #7f8897;
+}
