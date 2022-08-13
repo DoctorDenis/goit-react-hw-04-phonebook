@@ -1,6 +1,6 @@
 // import React from 'react';
 import { ContactForm, ContactList, Filter } from './exportMap';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 
 export default function App() {
   const [contacts, setContacts] = useState(
@@ -22,7 +22,7 @@ export default function App() {
     setContacts([...contacts, contact]);
   };
 
-  const onFilterInputChangeHandler = event => {
+  const filterInputChangeHandler = event => {
     setFilter(event.target.value);
   };
 
@@ -34,11 +34,12 @@ export default function App() {
     [contacts, filter]
   );
 
-  const deleteBtnClickHandler = event => {
-    setContacts([
-      ...contacts.filter(contact => contact.id !== Number(event.target.id)),
-    ]);
-  };
+  const deleteBtnClickHandler = useCallback(
+    id => {
+      setContacts([...contacts.filter(contact => contact.id !== Number(id))]);
+    },
+    [setContacts]
+  );
 
   return (
     <div>
@@ -46,7 +47,7 @@ export default function App() {
       <ContactForm onSubmit={submitHandler} contactsRef={contacts} />
 
       <h2>Contacts</h2>
-      <Filter onChange={onFilterInputChangeHandler} value={filter} />
+      <Filter onChange={filterInputChangeHandler} value={filter} />
 
       <ContactList
         contacts={filteredContacts}

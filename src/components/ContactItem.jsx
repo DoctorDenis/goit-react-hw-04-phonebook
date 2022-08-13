@@ -1,20 +1,20 @@
-import React from 'react';
 import PropTypes from 'prop-types';
+import { memo } from 'react';
 
-export default function ContactItem({
-  contact: { id, name, number },
-  delMethod,
-}) {
+function ContactItem({ contact: { id, name, number }, delMethod }) {
+  console.log(name);
   return (
     <li>
       <span>{name}: </span>
       <span>{number}</span>
-      <button id={id} type="button" onClick={delMethod}>
+      <button id={id} type="button" onClick={() => delMethod(id)}>
         Delete
       </button>
     </li>
   );
 }
+
+export default memo(ContactItem);
 
 ContactItem.propTypes = {
   contact: PropTypes.shape({
