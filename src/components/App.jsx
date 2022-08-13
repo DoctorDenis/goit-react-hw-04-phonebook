@@ -1,82 +1,57 @@
-import React from 'react';
+// import React from 'react';
 import { ContactForm, ContactList, Filter } from './exportMap';
+import { useState, useEffect, useMemo } from 'react';
 
-class App extends React.Component {
-  state = {
-    contacts: [],
-    filter: '',
-  };
+export default function App() {
+  const [contacts, setContacts] = useState(
+    JSON.parse(localStorage.getItem('contacts'))
+      ? [...JSON.parse(localStorage.getItem('contacts'))]
+      : []
+  );
+  const [filter, setFilter] = useState('');
 
-  componentDidMount() {
-    if (JSON.parse(localStorage.getItem('contacts'))) {
-      this.setState({
-        contacts: JSON.parse(localStorage.getItem('contacts')),
-      });
-    }
-  }
+  useEffect(() => {
+    localStorage.setItem('contacts', JSON.stringify(contacts));
+  }, [contacts]);
 
-  componentDidUpdate(_, prevState) {
-    const { contacts } = this.state;
-    if (prevState.contacts !== contacts) {
-      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
-    }
-  }
-
-  onSubmitHandler = contact => {
-    if (this.state.contacts.find(el => el.name === contact.name)) {
+  const submitHandler = contact => {
+    if (contacts.find(el => el.name === contact.name)) {
       alert(`Sorry! ${contact.name} is already in contacts`);
       return;
     }
-    this.setState({
-      contacts: [...this.state.contacts, contact],
-    });
+    setContacts([...contacts, contact]);
   };
 
-  onFilterInputChangeHandler = event => {
-    this.setState({
-      filter: event.target.value,
-    });
+  const onFilterInputChangeHandler = event => {
+    setFilter(event.target.value);
   };
 
-  filteredContacts = () => {
-    return this.state.contacts.filter(contact =>
-      contact.name.toLowerCase().includes(this.state.filter.toLowerCase())
-    );
+  const filteredContacts = useMemo(
+    () =>
+      contacts.filter(contact =>
+        contact.name.toLowerCase().includes(filter.toLowerCase())
+      ),
+    [contacts, filter]
+  );
+
+  const deleteBtnClickHandler = event => {
+    setContacts([
+      ...contacts.filter(contact => contact.id !== Number(event.target.id)),
+    ]);
   };
 
-  onDeleteBtnClickHandler = event => {
-    this.setState({
-      contacts: [
-        ...this.state.contacts.filter(
-          contact => contact.id !== Number(event.target.id)
-        ),
-      ],
-    });
-  };
+  return (
+    <div>
+      <h1>Phonebook</h1>
+      <ContactForm onSubmit={submitHandler} contactsRef={contacts} />
 
-  render() {
-    const filteredContacts = this.filteredContacts();
-    return (
-      <div>
-        <h1>Phonebook</h1>
-        <ContactForm
-          onSubmit={this.onSubmitHandler}
-          contactsRef={this.state.contacts}
-        />
+      <h2>Contacts</h2>
+      <Filter onChange={onFilterInputChangeHandler} value={filter} />
 
-        <h2>Contacts</h2>
-        <Filter
-          onChange={this.onFilterInputChangeHandler}
-          value={this.state.filter}
-        />
-
-        <ContactList
-          contacts={filteredContacts}
-          onClick={this.onDeleteBtnClickHandler}
-        />
-      </div>
-    );
-  }
+      <ContactList
+        contacts={filteredContacts}
+        onClick={deleteBtnClickHandler}
+      />
+    </div>
+  );
 }
-
-export default App;
