@@ -38,7 +38,8 @@ export default function App() {
     id => {
       setContacts([...contacts.filter(contact => contact.id !== Number(id))]);
     },
-    [setContacts]
+
+    [contacts]
   );
 
   return (

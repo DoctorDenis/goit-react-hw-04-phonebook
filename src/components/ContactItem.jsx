@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import { memo } from 'react';
 
 function ContactItem({ contact: { id, name, number }, delMethod }) {
-  console.log(name);
   return (
     <li>
       <span>{name}: </span>
